@@ -28,35 +28,21 @@ def get_table (key)
   decrypt_table = Array.new(256, 0)
 
   a = Digest::MD5.digest(key).unpack('Q<')[0]
-  i = 0
 
-  while i < 256
-    table[i] = i
-    i += 1
-  end
-  i = 1
+  0.upto(255).each{ |i| table[i] = i }
 
-  while i < 1024
+  1.upto(1023).each do |i|
     table = merge_sort(table, lambda { |x, y|
       a % (x + i) - a % (y + i)
     })
-    i += 1
   end
-  i = 0
-  while i < 256
-    decrypt_table[table[i]] = i
-    i += 1
-  end
+
+  0.upto(255).each{ |i| decrypt_table[table[i]] = i }
+
   [table, decrypt_table]
 end
 
 def encrypt (table, buf)
-  i = 0
-
-  while i < buf.length
-    buf[i] = table[buf[i].ord].chr
-    i += 1
-  end
+  0.upto(buf.length - 1).each{ |i| buf[i] = table[buf[i].ord].chr }
 end
-
 
