@@ -25,7 +25,6 @@ require 'eventmachine'
 require 'json'
 require './encrypt'
 
-
 cfg_file = File.open('config.json')
 config =  JSON.parse(cfg_file.read)
 cfg_file.close
@@ -38,10 +37,6 @@ $port = config['local_port'].to_i
 
 $encrypt_table, $decrypt_table = get_table(key)
 
-def inet_ntoa(n)
-    n.unpack("C*").join "."
-end
-
 module LocalServer
   class LocalConnector < EventMachine::Connection
     def initialize server
@@ -50,7 +45,7 @@ module LocalServer
     end
 
     def post_init
-      p "connecting #{@server.remote_addr} via #{@server.server_using}"
+      p "connecting #{@server.remote_addr[3..-1]} via #{$server}"
       addr_to_send = @server.addr_to_send.clone
       encrypt $encrypt_table, addr_to_send
       send_data addr_to_send
@@ -59,7 +54,7 @@ module LocalServer
         encrypt $encrypt_table, piece
         send_data piece
       end
-      @server.cached_pieces = nil
+      @server.cached_pieces = []
 
       @server.stage = 5
     end
@@ -74,96 +69,106 @@ module LocalServer
     end
   end
 
-  attr_accessor :remote_addr
-  attr_accessor :remote_port
-  attr_accessor :stage
-  attr_accessor :addr_to_send
-  attr_accessor :server_using
-  attr_accessor :cached_pieces
+  @@connected_clients = Array.new
 
-  def post_init
-    puts "local connected"
-    @stage = 0
-    @header_length = 0
-    @remote = 0
-    @cached_pieces = []
-    @remote_addr = nil
-    @remote_port = nil
-    @connector = nil
-    @addr_to_send = ""
-    @server_using = $server
+  attr_accessor :stage, :remote_addr, :addr_to_send, :cached_pieces
+
+  def initialize
+    super
   end
 
   def receive_data data
+    data_handler data
+  end
+
+  def post_init
+    @stage = 0
+    @@connected_clients.push(self)
+    @cached_pieces = []
+    puts "A client has connected..."
+  end
+
+  def unbind
+    @@connected_clients.delete(self)
+    puts "A client has left..."
+  end
+
+  private
+
+  def data_handler data
     if @stage == 5
       encrypt $encrypt_table, data
-      @connector.send_data data
-      return
-    end
-    if @stage == 0
+      @connector.send_data(data) and return
+    elsif @stage == 0
       send_data "\x05\x00"
       @stage = 1
-      return
-    end
-    if @stage == 1
+    elsif @stage == 1
       begin
-        addr_len = 0
-        cmd = data[1]
-        addrtype = data[3]
-        if cmd != "\x01"
-          warn "unsupported cmd: " + cmd.unpack('c')[0].to_s
-          close_connection
-          return
+        unless data[1] == "\x01"
+          send_data "\x05\x07\x00\x01"
+          self.close_connection and return
         end
-        if addrtype == "\x03"
-          addr_len = data[4].unpack('c')[0]
-        elsif addrtype != "\x01"
-          warn "unsupported addrtype: " + addrtype.unpack('c')[0].to_s
-          close_connection
-          return
-        end
+
         @addr_to_send = data[3]
-        if addrtype == "\x01"
-          @addr_to_send += data[4..9]
-          @remote_addr = inet_ntoa data[4..7]
-          @remote_port = data[8, 2].unpack('s>')[0]
-          @header_length = 10
-        else
-          @remote_addr = data[5, addr_len]
-          @addr_to_send += data[4..5 + addr_len + 2]
-          @remote_port = data[5 + addr_len, 2].unpack('s>')[0]
-          @header_length = 5 + addr_len + 2
-        end
-        #p @remote_addr, @remote_port
-        #p @addr_to_send
-        send_data "\x05\x00\x00\x01\x00\x00\x00\x00" + [@remote_port].pack('s>')
+
+        resolve_addrtype(data)
+
+        send_data "\x05\x00\x00\x01\x00\x00\x00\x00" + [$remote_port].pack('s>')
+
         @stage = 4
+        @connector = EventMachine.connect $server, $remote_port, LocalConnector, self
+
         if data.size > @header_length
           @cached_pieces.push data[@header_length, data.size]
         end
-
-        @connector = EventMachine.connect $server, $remote_port, LocalConnector, self
       rescue Exception => e
         warn e
-        if @connector != nil
-          @connector.close_connection
-        end
+        @connector.close_connection unless @connector.nil?
         close_connection
       end
     elsif @stage == 4
       @cached_pieces.push data
     end
-
   end
 
-  def unbind
-    if @connector != nil
-      @connector.close_connection_after_writing
+  def resolve_addrtype(data)
+    addrtype = data[3]
+    if addrtype == "\x01"
+      ip_address(data)
+    elsif addrtype == "\x03"
+      domain_adress(data)
+    else
+      warn "unsupported addrtype: " + addrtype.unpack('c')[0].to_s
+      close_connection and return
     end
-
   end
+
+  def domain_adress(data)
+    addr_len = data[4].unpack('c')[0]
+    @addr_to_send += data[4..5 + addr_len + 2]
+    @remote_addr = data[2, addr_len]
+    @remote_port = data[2 + addr_len, 2].unpack('s>')[0]
+    @header_length = 2 + addr_len + 2
+  end
+
+  def ip_address(data)
+    @addr_to_send += data[4..9]
+    @remote_addr = inet_ntoa data[1..4]
+    @remote_port = data[5, 2].unpack('s>')[0]
+    @header_length = 7
+  end
+
+  def inet_ntoa(n)
+    n.unpack("C*").join "."
+  end
+
 end
 
 EventMachine::run {
+  Signal.trap("INT")  { EventMachine.stop }
+  Signal.trap("TERM") { EventMachine.stop }
+
+  puts "*** Local side is up, port:#{$port}"
+  puts "*** Hit Ctrl+c to stop"
   EventMachine::start_server "0.0.0.0", $port, LocalServer
 }
