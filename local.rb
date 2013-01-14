@@ -47,12 +47,10 @@ module LocalServer
     def post_init
       p "connecting #{@server.remote_addr[3..-1]} via #{$server}"
       addr_to_send = @server.addr_to_send.clone
-      encrypt $encrypt_table, addr_to_send
-      send_data addr_to_send
+      send_data encrypt($encrypt_table, addr_to_send)
 
       for piece in @server.cached_pieces
-        encrypt $encrypt_table, piece
-        send_data piece
+        send_data encrypt($encrypt_table, piece)
       end
       @server.cached_pieces = []
 
@@ -60,8 +58,7 @@ module LocalServer
     end
 
     def receive_data data
-      encrypt $decrypt_table, data
-      @server.send_data data
+      @server.send_data encrypt($decrypt_table, data)
     end
 
     def unbind
@@ -97,8 +94,7 @@ module LocalServer
 
   def data_handler data
     if @stage == 5
-      encrypt $encrypt_table, data
-      @connector.send_data(data) and return
+      @connector.send_data(encrypt($encrypt_table, data)) and return
     elsif @stage == 0
       send_data "\x05\x00"
       @stage = 1

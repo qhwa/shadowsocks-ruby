@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+require "ffi"
 require "digest"
 require "./merge_sort"
 
@@ -42,7 +43,21 @@ def get_table (key)
   [table, decrypt_table]
 end
 
-def encrypt (table, buf)
-  0.upto(buf.length - 1).each{ |i| buf[i] = table[buf[i].ord].chr }
+module Ext
+  extend FFI::Library
+  ffi_lib "ext/ext.so"
+  attach_function "encrypt", [:pointer, :pointer, :int], :pointer
 end
 
+def encrypt (table, buf)
+  table_ptr = FFI::MemoryPointer.new(:int, table.length)
+  table_ptr.put_array_of_int32(0, table)
+
+  buf_ptr = FFI::MemoryPointer.new(:string, buf.length)
+  buf_ptr.put_bytes(0, buf)
+
+  r = Ext.encrypt(table_ptr, buf_ptr, buf.length).get_bytes(0, buf.length)
+  table_ptr.free
+  buf_ptr.free
+  r
+end
