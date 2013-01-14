@@ -58,8 +58,7 @@ module LocalServer
     end
 
     def receive_data data
-      encrypt $encrypt_table, data
-      @server.send_data data
+      @server.send_data encrypt($encrypt_table, data)
     end
 
     def unbind
@@ -88,7 +87,7 @@ module LocalServer
   end
 
   def receive_data data
-    encrypt $decrypt_table, data
+    data = encrypt $decrypt_table, data
     if @stage == 5
       @connector.send_data data
       return
