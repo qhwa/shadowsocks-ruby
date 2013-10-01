@@ -12,7 +12,7 @@ module Shadowsocks
     end
 
     def read_config
-      @config_path = File.expand_path('../..', File.dirname(__FILE__)) + '/config.json' unless @config_file
+      @config_path = File.expand_path('../..', File.dirname(__FILE__)) + '/config.json' unless @config_path
       cfg_file = File.open @config_path
       json = JSON.parse cfg_file.read
       cfg_file.close
