@@ -1,2 +1,7 @@
 *.so
 *.o
+.DS_Store
+*.gem
+tmp
+*.bundle
+Gemfile.lock

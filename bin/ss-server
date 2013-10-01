@@ -1,3 +1,19 @@
 #!/usr/bin/env ruby
 
-p 'hello, i am server'
+lib = File.expand_path(File.dirname(__FILE__) + '/../lib')
+$LOAD_PATH.unshift(lib) if File.directory?(lib) && !$LOAD_PATH.include?(lib)
+
+require 'shadowsocks'
+require 'shadowsocks/cli'
+require 'shadowsocks/config'
+
+begin
+  config = Shadowsocks::Config.new ARGV
+  cli = Shadowsocks::Cli.new({side: :server, config: config})
+  cli.run
+rescue => e
+  raise e if $DEBUG
+  STDERR.puts e.message
+  STDERR.puts e.backtrace.join("\n")
+  exit 1
+end

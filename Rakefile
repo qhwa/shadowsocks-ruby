@@ -1,8 +1,5 @@
+# encoding: UTF-8
 require 'rake'
 
-task :default => 'compile'
-
-task :compile do
-  `rm ./ext/*.o ./ext/*.so`
-  `cd ./ext && gcc -fPIC -c ext.c && gcc -shared -o ext.so ext.o`
-end
+# Load custom tasks
+Dir['tasks/*.rake'].sort.each { |f| load f }

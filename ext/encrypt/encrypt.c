@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 char* encrypt(int table[], char buf[], int len)
 {
     int j = 0;
