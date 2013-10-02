@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.version       = Shadowsocks::VERSION
   s.date          = '2013-09-26'
   s.summary       = "ruby version of shadowsocks"
-  s.description   = "Fuck GFW"
+  s.description   = "shadowsocks-ruby is a lightweight tunnel proxy which can help you get through firewalls."
   s.authors       = ["Sen"]
   s.email         = 'sen9ob@gmail.com'
   s.files         = `git ls-files`.split("\n")
