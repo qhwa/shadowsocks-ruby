@@ -1,5 +1,5 @@
 module Shadowsocks
-  class Tunnel < EventMachine::Connection
+  class Tunnel < ::Shadowsocks::Connection
     attr_accessor :server, :table
 
     def initialize server, table
@@ -10,6 +10,10 @@ module Shadowsocks
 
     def unbind
       server.close_connection_after_writing
+    end
+
+    def remote
+      server
     end
 
     def encrypt table, data

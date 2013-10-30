@@ -12,6 +12,7 @@ module Shadowsocks
 
       def receive_data data
         server.send_data encrypt(table[:encrypt_table], data)
+        outbound_checker
       end
     end
 

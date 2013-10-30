@@ -1,5 +1,5 @@
 module Shadowsocks
-  class Listener < EventMachine::Connection
+  class Listener < ::Shadowsocks::Connection
     include ::Shadowsocks::Table
 
     attr_accessor :stage, :remote_addr, :remote_port, :addr_to_send, :cached_pieces,
@@ -7,6 +7,7 @@ module Shadowsocks
 
     def receive_data data
       data_handler data
+      outbound_checker if connector
     end
 
     def post_init
@@ -18,6 +19,10 @@ module Shadowsocks
     def unbind
       puts "A client has left..."
       connection_cleanup
+    end
+
+    def remote
+      connector
     end
 
     private
