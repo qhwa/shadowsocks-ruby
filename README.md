@@ -3,7 +3,7 @@ shadowsocks-ruby
 
 [![Code Climate](https://codeclimate.com/repos/524baea6c7f3a37df208dd4c/badges/9dd6c11b6a17c3a55631/gpa.png)](https://codeclimate.com/repos/524baea6c7f3a37df208dd4c/feed)
 
-Current version: 0.2
+Current version: 0.3
 
 shadowsocks-ruby is a lightweight tunnel proxy which can help you get through firewalls. It is a port of [shadowsocks](https://github.com/clowwindy/shadowsocks).
 
