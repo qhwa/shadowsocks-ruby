@@ -3,7 +3,7 @@ require File.expand_path('../lib/shadowsocks/version', __FILE__)
 Gem::Specification.new do |s|
   s.name          = 'shadowsocks'
   s.version       = Shadowsocks::VERSION
-  s.date          = '2013-09-26'
+  s.date          = Date.today
   s.summary       = "ruby version of shadowsocks"
   s.description   = "shadowsocks-ruby is a lightweight tunnel proxy which can help you get through firewalls."
   s.authors       = ["Sen"]
