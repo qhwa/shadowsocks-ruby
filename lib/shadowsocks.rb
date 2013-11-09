@@ -1,6 +1,7 @@
 require 'eventmachine'
 
 module Shadowsocks
+  autoload :Crypto,   'shadowsocks/crypto'
   autoload :Connection, 'shadowsocks/connection'
   autoload :Server,     'shadowsocks/server'
   autoload :Local,      'shadowsocks/local'

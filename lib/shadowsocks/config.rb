@@ -2,7 +2,7 @@ require 'json'
 
 module Shadowsocks
   class Config
-    attr_reader :args, :server, :server_port, :local_port, :password, :timeout, :config_path
+    attr_reader :args, :server, :server_port, :local_port, :password, :timeout, :method, :config_path
 
     def initialize(_args)
       @args = _args || []
@@ -22,6 +22,7 @@ module Shadowsocks
       @server_port  = json["server_port"].to_i if @server_port.nil?
       @local_port   = json["local_port"].to_i  if @local_port.nil?
       @timeout      = json["timeout"].to_i     if @timeout.nil?
+      @method       = json["method"]           if @method.nil?
     end
 
     private
@@ -37,7 +38,8 @@ module Shadowsocks
         opts.on("-k", "--password PASSWORD", "Password, should be same in client and server sides")  { |c| @password    = c }
         opts.on("-c", "--config PATH", "config.json path")                                           { |c| @config_path = c }
         opts.on("-p", "--port PORT", Integer, "Remote server port")                                  { |c| @server_port = c }
-        opts.on("-l", "--local_port PORT", Integer,"Local client port")                              { |c| @local_port  = c }
+        opts.on("-l", "--local_port PORT", Integer, "Local client port")                             { |c| @local_port  = c }
+        opts.on("-m", "--method METHOD", Integer, "Encryption method")                               { |c| @method      = c }
         opts.on("-t", "--timeout NUMBER", Integer, "connection timeout")                             { |c| @timeout     = c }
 
         opts.on_tail("-v", "--version", "Show shadowsocks gem version")                              { puts Shadowsocks::VERSION; exit }
