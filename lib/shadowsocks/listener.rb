@@ -1,9 +1,7 @@
 module Shadowsocks
   class Listener < EventMachine::Connection
-    include ::Shadowsocks::Table
-
     attr_accessor :stage, :remote_addr, :remote_port, :addr_to_send, :cached_pieces,
-                  :header_length, :connector, :config, :table
+                  :header_length, :connector, :config, :crypto
 
     def receive_data data
       data_handler data
@@ -21,6 +19,14 @@ module Shadowsocks
     end
 
     private
+
+    def encrypt(buf)
+      crypto.encrypt(buf)
+    end
+
+    def decrypt(buf)
+      crypto.decrypt(buf)
+    end
 
     def connection_cleanup
       connector.close_connection if connector

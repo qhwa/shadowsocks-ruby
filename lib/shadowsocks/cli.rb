@@ -7,12 +7,24 @@ module Shadowsocks
   class Cli
     include ::Shadowsocks::Table
 
-    attr_accessor :side, :args, :config, :table
+    attr_accessor :side, :args, :config
 
     def initialize(options)
       @side   = options[:side]
       @config = options[:config]
-      @table  = get_table(config.password)
+
+      @method_options = {
+        method:   config.method,
+        password: config.password
+      }
+
+      if @config.method == 'table'
+        table = get_table(config.password)
+        @method_options.merge!(
+          encrypt_table: table[:encrypt],
+          decrypt_table: table[:decrypt]
+        )
+      end
     end
 
     def run
@@ -43,7 +55,7 @@ module Shadowsocks
 
     def initialize_connection connection
       connection.config                  = @config
-      connection.table                   = @table
+      connection.crypto                  = Shadowsocks::Crypto.new @method_options
       connection.pending_connect_timeout = @config.timeout
     end
 

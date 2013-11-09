@@ -45,10 +45,10 @@ module Shadowsocks
         decrypt_table[table[i]] = i
         i += 1
       end
-      { encrypt_table: table, decrypt_table: decrypt_table }
+      { encrypt: table, decrypt: decrypt_table }
     end
 
-    def encrypt (table, buf)
+    def translate(table, buf)
       table_ptr = FFI::MemoryPointer.new(:int, table.length)
       table_ptr.put_array_of_int32(0, table)
 

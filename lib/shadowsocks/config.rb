@@ -22,6 +22,7 @@ module Shadowsocks
       @server_port  = json["server_port"].to_i if @server_port.nil?
       @local_port   = json["local_port"].to_i  if @local_port.nil?
       @timeout      = json["timeout"].to_i     if @timeout.nil?
+      @method       = json["method"]           if @method.nil?
     end
 
     private

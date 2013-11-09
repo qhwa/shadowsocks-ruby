@@ -1,10 +1,10 @@
 module Shadowsocks
   class Tunnel < EventMachine::Connection
-    attr_accessor :server, :table
+    attr_accessor :server, :crypto
 
-    def initialize server, table
+    def initialize server, crypto
       @server = server
-      @table  = table
+      @crypto = crypto
       super
     end
 
@@ -12,8 +12,14 @@ module Shadowsocks
       server.close_connection_after_writing
     end
 
-    def encrypt table, data
-      server.encrypt table, data
+    private
+
+    def encrypt(buf)
+      crypto.encrypt(buf)
+    end
+
+    def decrypt(buf)
+      crypto.decrypt(buf)
     end
   end
 end

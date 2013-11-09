@@ -11,7 +11,7 @@ module Shadowsocks
       end
 
       def receive_data data
-        server.send_data encrypt(table[:encrypt_table], data)
+        server.send_data encrypt(data)
       end
     end
 
@@ -19,7 +19,7 @@ module Shadowsocks
       private
 
       def data_handler data
-        data = encrypt table[:decrypt_table], data
+        data = decrypt data
         case stage
         when 0
           fireup_tunnel data
@@ -40,7 +40,7 @@ module Shadowsocks
             cached_pieces.push data[header_length, data.size]
           end
 
-          @connector = EventMachine.connect @remote_addr, @remote_port, RequestConnector, self, table
+          @connector = EventMachine.connect @remote_addr, @remote_port, RequestConnector, self, crypto
         rescue Exception => e
           warn e
           connection_cleanup
