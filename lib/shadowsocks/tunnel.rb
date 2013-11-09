@@ -1,6 +1,6 @@
 module Shadowsocks
   class Tunnel < ::Shadowsocks::Connection
-    attr_accessor :server, :table
+    attr_accessor :server
 
     def initialize server, crypto
       @server = server
@@ -14,16 +14,6 @@ module Shadowsocks
 
     def remote
       server
-    end
-
-    private
-
-    def encrypt(buf)
-      crypto.encrypt(buf)
-    end
-
-    def decrypt(buf)
-      crypto.decrypt(buf)
     end
   end
 end
