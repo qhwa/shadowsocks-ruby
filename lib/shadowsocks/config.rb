@@ -39,7 +39,7 @@ module Shadowsocks
         opts.on("-c", "--config PATH", "config.json path")                                           { |c| @config_path = c }
         opts.on("-p", "--port PORT", Integer, "Remote server port")                                  { |c| @server_port = c }
         opts.on("-l", "--local_port PORT", Integer, "Local client port")                             { |c| @local_port  = c }
-        opts.on("-m", "--method METHOD", Integer, "Encryption method")                               { |c| @method      = c }
+        opts.on("-m", "--method METHOD", "Encryption method")                                        { |c| @method      = c }
         opts.on("-t", "--timeout NUMBER", Integer, "connection timeout")                             { |c| @timeout     = c }
 
         opts.on_tail("-v", "--version", "Show shadowsocks gem version")                              { puts Shadowsocks::VERSION; exit }
