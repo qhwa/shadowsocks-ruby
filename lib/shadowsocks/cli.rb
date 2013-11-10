@@ -57,6 +57,7 @@ module Shadowsocks
       connection.config                  = @config
       connection.crypto                  = Shadowsocks::Crypto.new @method_options
       connection.pending_connect_timeout = @config.timeout
+      connection.comm_inactivity_timeout = @config.timeout
     end
 
   end
