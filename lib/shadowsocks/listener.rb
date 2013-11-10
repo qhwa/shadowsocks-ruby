@@ -5,7 +5,7 @@ module Shadowsocks
 
     def receive_data data
       data_handler data
-      outbound_checker if connector
+      outbound_scheduler if connector
     end
 
     def post_init

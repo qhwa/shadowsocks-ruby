@@ -14,7 +14,7 @@ module Shadowsocks
 
       def receive_data data
         server.send_data decrypt(data)
-        outbound_checker
+        outbound_scheduler
       end
     end
 
