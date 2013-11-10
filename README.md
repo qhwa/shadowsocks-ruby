@@ -27,7 +27,7 @@ Create a file named `config.json`, with the following content.
         "local_port":1080,
         "password":"barfoo!",
         "timeout":60,
-        "method":"aes-256-cfb"
+        "method":"aes-128-cfb"
     }
 
 Explanation of the fields:
@@ -37,7 +37,7 @@ Explanation of the fields:
     local_port      local port
     password        a password used to encrypt transfer
     timeout         in seconds
-    method          encryption method, "bf-cfb", "aes-256-cfb", "des-cfb", "rc4", etc. Default is aes-256-cfb
+    method          encryption method, "bf-cfb", "aes-256-cfb", "des-cfb", "rc4", etc. Default is "aes-128-cfb"
     
 `cd` into the directory of `config.json`. Run `ss-server` on your server. To run it in the background, run
 `nohup ss-server -c ./config.json > log &`.
