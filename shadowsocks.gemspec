@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency "json", "~> 1.8.0"
   s.add_dependency "ffi", "~> 1.9.0"
 
-  s.add_development_dependency "rake-compiler", "~> 0.9.1"
-  s.add_development_dependency "mocha", "~> 0.14.0"
+  s.add_development_dependency "rake-compiler", "~> 0.9.2"
+  s.add_development_dependency "mocha", "~> 1.0.0"
   s.add_development_dependency "rake"
 end

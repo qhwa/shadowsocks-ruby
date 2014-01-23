@@ -1,24 +1,29 @@
 PATH
   remote: .
   specs:
-    shadowsocks (0.1)
+    shadowsocks (0.6)
       eventmachine (~> 1.0.3)
+      ffi (~> 1.9.0)
       json (~> 1.8.0)
 
 GEM
   remote: http://rubygems.org/
   specs:
     eventmachine (1.0.3)
-    json (1.8.0)
-    metaclass (0.0.1)
-    mocha (0.14.0)
+    ffi (1.9.3)
+    json (1.8.1)
+    metaclass (0.0.2)
+    mocha (1.0.0)
       metaclass (~> 0.0.1)
     rake (10.1.0)
+    rake-compiler (0.9.2)
+      rake
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  mocha (~> 0.14.0)
+  mocha (~> 1.0.0)
   rake
+  rake-compiler (~> 0.9.2)
   shadowsocks!

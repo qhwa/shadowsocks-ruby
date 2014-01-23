@@ -37,7 +37,7 @@ module Shadowsocks
       def remote_addr
         case mode
         when :domain
-          data[2, addr_len]
+          data[2, addr_len + 3]
         when :ip
           inet_ntoa data[1..4]
         end
@@ -46,7 +46,7 @@ module Shadowsocks
       def remote_port
         case mode
         when :domain
-          data[2 + addr_len, 2].unpack('s>')[0]
+          data[5 + addr_len, 2].unpack('s>')[0]
         when :ip
           data[5, 2].unpack('s>')[0]
         end

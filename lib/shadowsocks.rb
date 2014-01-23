@@ -8,6 +8,7 @@ module Shadowsocks
   autoload :Table,      'shadowsocks/table'
   autoload :Tunnel,     'shadowsocks/tunnel'
   autoload :Listener,   'shadowsocks/listener'
+  autoload :IPDetector, 'shadowsocks/ip_detector'
 
   module Parser
     autoload :Base,     'shadowsocks/parser/base'

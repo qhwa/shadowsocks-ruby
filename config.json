@@ -1,8 +1,9 @@
 {
-    "server":"127.0.0.1",
+    "server":"162.243.140.72",
     "server_port":8388,
     "local_port":1080,
-    "password":"barfoo!",
+    "password":"be_tough",
     "timeout":60,
-    "method":"aes-128-cfb"
+    "method":"aes-128-cfb",
+    "chnroutes":true
 }
