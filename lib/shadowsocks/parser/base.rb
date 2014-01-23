@@ -35,21 +35,11 @@ module Shadowsocks
       end
 
       def remote_addr
-        case mode
-        when :domain
-          data[2, addr_len + 3]
-        when :ip
-          inet_ntoa data[1..4]
-        end
+        raise 'Called abstract method: remote_addr'
       end
 
       def remote_port
-        case mode
-        when :domain
-          data[5 + addr_len, 2].unpack('s>')[0]
-        when :ip
-          data[5, 2].unpack('s>')[0]
-        end
+        raise 'Called abstract method: remote_port'
       end
 
       def header_length
