@@ -3,7 +3,7 @@ shadowsocks-ruby
 
 [![Code Climate](https://codeclimate.com/repos/524baea6c7f3a37df208dd4c/badges/9dd6c11b6a17c3a55631/gpa.png)](https://codeclimate.com/repos/524baea6c7f3a37df208dd4c/feed)
 
-Current version: 0.6
+Current version: 0.7
 
 shadowsocks-ruby is a lightweight tunnel proxy which can help you get through firewalls. It is a port of [shadowsocks](https://github.com/clowwindy/shadowsocks).
 
@@ -27,7 +27,8 @@ Create a file named `config.json`, with the following content.
         "local_port":1080,
         "password":"barfoo!",
         "timeout":60,
-        "method":"aes-128-cfb"
+        "method":"aes-128-cfb",
+        "chnroute":true
     }
 
 Explanation of the fields:
@@ -38,6 +39,7 @@ Explanation of the fields:
     password        a password used to encrypt transfer
     timeout         in seconds
     method          encryption method, "bf-cfb", "aes-256-cfb", "des-cfb", "rc4", etc. Default is "aes-128-cfb"
+    chnroute        speed up China ip
     
 `cd` into the directory of `config.json`. Run `ss-server` on your server. To run it in the background, run
 `nohup ss-server -c ./config.json > log &`.
