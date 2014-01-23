@@ -42,9 +42,7 @@ module Shadowsocks
             connection_cleanup and return
           end
 
-          @addr_to_send = data[3]
-
-          resolve_addrtype data
+          parse_data Shadowsocks::Parser::Local.new(data)
 
           send_data "\x05\x00\x00\x01\x00\x00\x00\x00" + [config.server_port].pack('s>')
 
@@ -58,22 +56,6 @@ module Shadowsocks
           warn e
           connection_cleanup
         end
-      end
-
-      def resolve_addrtype data
-        @addrtype = data[3]
-        super
-      end
-
-      def domain_address data
-        @addr_len       = data[4].unpack('c')[0]
-        @addr_to_send  += data[4..5 + @addr_len + 2]
-        super
-      end
-
-      def ip_address data
-        @addr_to_send  += data[4..9]
-        super
       end
     end
   end

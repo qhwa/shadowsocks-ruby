@@ -33,7 +33,7 @@ module Shadowsocks
 
       def fireup_tunnel data
         begin
-          resolve_addrtype data
+          parse_data Shadowsocks::Parser::Server.new(data)
 
           @stage = 4
 
@@ -46,16 +46,6 @@ module Shadowsocks
           warn e
           connection_cleanup
         end
-      end
-
-      def resolve_addrtype data
-        @addrtype = data[0]
-        super
-      end
-
-      def domain_address data
-        @addr_len = data[1].unpack('c')[0]
-        super
       end
     end
   end
