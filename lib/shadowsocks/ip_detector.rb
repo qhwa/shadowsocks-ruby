@@ -3,7 +3,7 @@ require 'socket'
 
 module Shadowsocks
   class IPDetector
-    GFW_LIST_PATH = './data/gfwlist.txt'
+    GFW_LIST_PATH = File.expand_path('../../../data/gfwlist.txt', __FILE__)
 
     def initialize
       @internals = {}
