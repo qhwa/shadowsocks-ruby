@@ -15,13 +15,11 @@ module Shadowsocks
       if method == 'table'
         @encrypt_table = options[:encrypt_table]
         @decrypt_table = options[:decrypt_table]
-      else
-        if method_supported.nil?
-          raise "Encrypt method not support"
-        end
+      elsif method_supported.nil?
+        raise "Encrypt method not support"
       end
 
-      if method != 'table'
+      if method != 'table' and method != 'none'
         @cipher = get_cipher(1, SecureRandom.hex(32))
       end
     end
@@ -41,12 +39,13 @@ module Shadowsocks
       when 'rc2-cfb'          then [16, 8 ]
       when 'rc4'              then [16, 0 ]
       when 'seed-cfb'         then [16, 16]
+      when 'none'             then [0,  0]
       end
     end
     alias_method :get_cipher_len, :method_supported
 
     def encrypt buf
-      return buf if buf.length == 0
+      return buf if buf.length == 0 or method == 'none'
       if method == 'table'
         translate @encrypt_table, buf
       else
@@ -60,7 +59,7 @@ module Shadowsocks
     end
 
     def decrypt buf
-      return buf if buf.length == 0
+      return buf if buf.length == 0 or method == 'none'
       if method == 'table'
         translate @decrypt_table, buf
       else
