@@ -1,9 +1,7 @@
 shadowsocks-ruby
 ================
 
-[![Code Climate](https://codeclimate.com/repos/524baea6c7f3a37df208dd4c/badges/9dd6c11b6a17c3a55631/gpa.png)](https://codeclimate.com/repos/524baea6c7f3a37df208dd4c/feed)
-
-Current version: 0.7
+Current version: 0.10
 
 shadowsocks-ruby is a lightweight tunnel proxy which can help you get through firewalls. It is a port of [shadowsocks](https://github.com/clowwindy/shadowsocks).
 
@@ -59,7 +57,7 @@ Command line args
 
 You can use args to override settings from `config.json`.
 
-    ss-local -s server_name -p server_port -l local_port -k password
+    ss-local -s server_name -p server_port -l local_port -k password -m aes-128-cfb -d true
     ss-server -p server_port -k password
     ss-server -c /etc/shadowsocks/config.json
 
