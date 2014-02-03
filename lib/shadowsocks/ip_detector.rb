@@ -1,5 +1,6 @@
 require 'ipaddr'
 require 'socket'
+require 'digest/md5'
 
 module Shadowsocks
   class IPDetector
@@ -8,6 +9,7 @@ module Shadowsocks
     def initialize
       @internals = {}
       @nums      = []
+      @dns_cache = {}
       lines = File.readlines(GFW_LIST_PATH)
       lines.each do |line|
         num = IPAddr.new(line).to_i
@@ -18,13 +20,29 @@ module Shadowsocks
     end
 
     def behind_gfw?(domain)
-      ip = IPSocket::getaddress(domain)
+      key = Digest::MD5.hexdigest domain
 
-      ip_num = IPAddr.new(ip).to_i
+      if @dns_cache[key]
+        @dns_cache[key]
+      else
+        begin
+          ip = IPSocket::getaddress(domain)
 
-      i = @nums.bsearch { |x| x > ip_num }
-      index = @nums.index(i) - 1
-      IPAddr.new(@internals[@nums[index].to_s]).include? ip
+          ip_num = IPAddr.new(ip).to_i
+
+          i = @nums.bsearch { |x| x > ip_num }
+          index = @nums.index(i) - 1
+          r = IPAddr.new(@internals[@nums[index].to_s]).include? ip
+          if @dns_cache.size > 10
+            @dns_cache.delete @dns_cache.first[0]
+          end
+
+          @dns_cache[key] = r
+          r
+        rescue Exception
+          false
+        end
+      end
     end
   end
 end
