@@ -71,19 +71,29 @@ module Shadowsocks
 
           @stage = 4
 
-          if config.chnroutes
-            @behind_gfw = @ip_detector.behind_gfw?(@remote_addr[3..-1])
-          end
+          op = proc {
+            if config.chnroutes
+              @behind_gfw = @ip_detector.behind_gfw?(@remote_addr[3..-1])
+            else
+              false
+            end
+          }
 
-          if config.chnroutes == true and behind_gfw
-            @connector = EventMachine.connect @remote_addr[3..-1], @remote_port, DirectConnector, self, crypto
-          else
-            @connector = EventMachine.connect config.server, config.server_port, ServerConnector, self, crypto
-          end
+          callback = proc { |result|
+            if config.chnroutes and result
+              @connector = EventMachine.connect @remote_addr[3..-1], @remote_port, \
+                DirectConnector, self, crypto
+            else
+              @connector = EventMachine.connect config.server, config.server_port, \
+                ServerConnector, self, crypto
+            end
 
-          if data.size > header_length
-            cached_pieces.push data[header_length, data.size]
-          end
+            if data.size > header_length
+              cached_pieces.push data[header_length, data.size]
+            end
+          }
+
+          EM.defer op, callback
         rescue Exception => e
           warn e
           connection_cleanup
