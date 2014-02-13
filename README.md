@@ -1,7 +1,7 @@
 shadowsocks-ruby
 ================
 
-Current version: 0.10
+Current version: 0.11
 
 shadowsocks-ruby is a lightweight tunnel proxy which can help you get through firewalls. It is a port of [shadowsocks](https://github.com/clowwindy/shadowsocks).
 
