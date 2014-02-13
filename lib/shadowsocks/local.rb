@@ -80,11 +80,14 @@ module Shadowsocks
           }
 
           callback = proc { |result|
-            if config.chnroutes and result
-              @connector = EventMachine.connect @remote_addr[3..-1], @remote_port, \
+            begin
+              if !(config.chnroutes and result)
+                raise 'will use remote server'
+              end
+              @connector = EM.connect @remote_addr[3..-1], @remote_port, \
                 DirectConnector, self, crypto
-            else
-              @connector = EventMachine.connect config.server, config.server_port, \
+            rescue Exception
+              @connector = EM.connect config.server, config.server_port, \
                 ServerConnector, self, crypto
             end
 

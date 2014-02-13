@@ -33,7 +33,7 @@ module Shadowsocks
           i = @nums.bsearch { |x| x > ip_num }
           index = @nums.index(i) - 1
           r = IPAddr.new(@internals[@nums[index].to_s]).include? ip
-          if @dns_cache.size > 10
+          if @dns_cache.size > 512
             @dns_cache.delete @dns_cache.first[0]
           end
 
