@@ -9,17 +9,18 @@ Gem::Specification.new do |s|
   s.authors       = ["Sen"]
   s.email         = 'sen9ob@gmail.com'
   s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- test/{functional,unit}/*`.split("\n")
+  s.test_files    = `git ls-files -- test/**/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.homepage      = 'http://rubygems.org/gems/shadowsocks'
   s.license       = 'MIT'
   s.extensions    = %w[ext/encrypt/extconf.rb]
 
+  s.add_dependency 'celluloid-io', '~> 0.15.0'
   s.add_dependency "eventmachine", "~> 1.0.3"
   s.add_dependency "json", "~> 1.8.0"
   s.add_dependency "ffi", "~> 1.9.0"
 
   s.add_development_dependency "rake-compiler", "~> 0.9.2"
-  s.add_development_dependency "mocha", "~> 1.0.0"
-  s.add_development_dependency "rake"
+  s.add_development_dependency 'rake', '~> 10.2.2'
+  s.add_development_dependency 'minitest', '~> 5.3.2'
 end

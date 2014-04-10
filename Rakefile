@@ -3,3 +3,5 @@ require 'rake'
 
 # Load custom tasks
 Dir['tasks/*.rake'].sort.each { |f| load f }
+
+task :default => :test

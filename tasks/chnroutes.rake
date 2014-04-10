@@ -1,5 +1,5 @@
 require 'ipaddr'
-require 'ipaddress'
+#require 'ipaddress'
 require 'benchmark'
 
 task :fetch_chnroutes do

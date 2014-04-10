@@ -2,7 +2,7 @@ module Shadowsocks
   module Local
     class ServerConnector < ::Shadowsocks::Tunnel
       def post_init
-        p "connecting #{server.remote_addr[3..-1]} via #{server.config.server}"
+        puts "connecting #{server.remote_addr[3..-1]} via #{server.config.server}"
         addr_to_send = server.addr_to_send.clone
 
         send_data encrypt(addr_to_send)
@@ -20,7 +20,7 @@ module Shadowsocks
 
     class DirectConnector < ::Shadowsocks::Tunnel
       def post_init
-        p "connecting #{server.remote_addr[3..-1]} directly"
+        puts "connecting #{server.remote_addr[3..-1]} directly"
         server.cached_pieces.each { |piece| send_data piece }
         server.cached_pieces = []
 

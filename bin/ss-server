@@ -9,8 +9,9 @@ require 'shadowsocks/config'
 
 begin
   config = Shadowsocks::Config.new ARGV
-  cli = Shadowsocks::Cli.new({side: :server, config: config})
-  cli.run
+  crypto = Shadowsocks::Cryptos::Wrapper.crypto method: config.method, password: config.password
+  cli = Shadowsocks::Cli.new({ config: config, crypto: crypto })
+  cli.server_up
 rescue => e
   raise e if $DEBUG
   STDERR.puts e.message
