@@ -9,9 +9,8 @@ require 'shadowsocks/config'
 
 begin
   config = Shadowsocks::Config.new ARGV
-  crypto = Shadowsocks::Cryptos::Wrapper.crypto method: config.method, password: config.password
   ip_detector = Shadowsocks::IPDetector.new if config.chnroutes
-  cli = Shadowsocks::Cli.new({ config: config, crypto: crypto, ip_detector: ip_detector })
+  cli = Shadowsocks::Cli.new({ config: config, ip_detector: ip_detector })
   cli.local_up
 rescue => e
   raise e if $DEBUG

@@ -1,3 +1,5 @@
+require 'celluloid/io'
+
 module Shadowsocks
   module Local
     class ServerConnector < ::Shadowsocks::Tunnel

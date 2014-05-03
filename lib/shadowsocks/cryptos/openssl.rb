@@ -15,7 +15,7 @@ module Shadowsocks
           raise "Encrypt method not support"
         end
 
-        @cipher = get_cipher(1, SecureRandom.hex(32))
+        @cipher = get_cipher(1, SecureRandom.hex(32)) unless method == 'none'
       end
 
       def encrypt buf
@@ -32,7 +32,7 @@ module Shadowsocks
         return buf if buf.length == 0 or method == 'none'
         if @decipher.nil?
           decipher_iv_len = get_cipher_len[1]
-          decipher_iv     = buf[0..decipher_iv_len ]
+          decipher_iv     = buf[0..decipher_iv_len]
           @iv             = decipher_iv
           @decipher       = get_cipher(0, @iv)
           buf             = buf[decipher_iv_len..-1]

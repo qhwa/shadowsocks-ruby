@@ -3,15 +3,19 @@ require 'eventmachine'
 module Shadowsocks
   autoload :Connection, 'shadowsocks/connection'
   autoload :Server,     'shadowsocks/server'
-  autoload :Local,      'shadowsocks/local'
   autoload :Tunnel,     'shadowsocks/tunnel'
   autoload :Listener,   'shadowsocks/listener'
   autoload :IPDetector, 'shadowsocks/ip_detector'
 
-  module Parser
-    autoload :Base,     'shadowsocks/parser/base'
-    autoload :Local,    'shadowsocks/parser/local'
-    autoload :Server,   'shadowsocks/parser/server'
+  module Local
+    autoload :Connector, 'shadowsocks/local/connector'
+    autoload :Server,    'shadowsocks/local/server'
+  end
+
+  module Parsers
+    #autoload :Base,     'shadowsocks/parser/base'
+    autoload :Local,    'shadowsocks/parsers/local'
+    autoload :Server,   'shadowsocks/parsers/server'
   end
 
   module Cryptos
