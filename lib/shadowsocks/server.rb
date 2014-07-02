@@ -20,7 +20,13 @@ module Shadowsocks
       private
 
       def data_handler data
-        data = decrypt data
+        begin
+          data = decrypt data
+        rescue Exception => e
+          warn e
+          connection_cleanup
+        end
+
         case stage
         when 0
           fireup_tunnel data
