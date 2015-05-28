@@ -21,5 +21,6 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "rake-compiler", "~> 0.9.2"
   s.add_development_dependency "mocha", "~> 1.0.0"
+  s.add_development_dependency "ipaddress", '~> 0.8.0'
   s.add_development_dependency "rake"
 end
